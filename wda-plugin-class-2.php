@@ -30,9 +30,23 @@ class Scan_QR_Code_To_Redirect_URL {
     }
 
     public function add_qr_code_to_content($content) {
-        $url = get_permalink();
-        $image = '<p> <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' . $url . '" alt="QR Code" /> </p>';
+        $is_show = apply_filters( 'academy_show_post_content_qr_code', true );
+
+        if ( ! $is_show ) {
+            return $content;
+        }
+
+        $url = get_the_permalink();
+
+        $custom_classes = implode(
+            " ",
+            apply_filters( 'qr_code_css_classes', array() )
+        );
+
+        $image = '<p><img class="' . $custom_classes . '" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' . $url . '"></p>';
+
         $content .= $image;
+
         return $content;
     }
 
